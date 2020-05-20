@@ -5,17 +5,20 @@ function usage() {
 }
 
 function start_mysql() {
-    # Wrapper to the original MySQL entrypoint
+    # Call the original MySQL entrypoint
     exec /usr/local/bin/docker-entrypoint.sh mysqld
 }
-nn
+
 function start_master() {
     echo "Starting MySQL master"
+    envsubst < /opt/mysql/conf/master.cnf > /etc/mysql/conf.d/master.cnf
+    envsubst < /opt/mysql/conf/sql/master-init.sql > /docker-entrypoint-initdb.d/master-init.sql
     start_mysql
 }
 
 function start_slave() {
     echo "Starting MySQL slave"
+    envsubst < /opt/mysql/conf/slave.cnf > /etc/mysql/conf.d/slave.cnf
     start_mysql
 }
 
@@ -26,9 +29,6 @@ case $command in
         ;;
     slave)
         start_slave
-        ;;
-    shell)
-        bash
         ;;
     *)
         usage
