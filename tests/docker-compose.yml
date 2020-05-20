@@ -1,0 +1,52 @@
+version: '3'
+services:
+  master:
+    image: donkeysharp/mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=foobar_db
+      - MYSQL_USER=foobar
+      - MYSQL_PASSWORD=foobar
+      - MYSQL_REPLICA_USER=replicator
+      - MYSQL_REPLICA_PASSWORD=replicator
+      - MYSQL_SERVER_ID=1
+    restart: always
+
+  replica1:
+    image: donkeysharp/mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=foobar_db
+      - MYSQL_USER=foobar
+      - MYSQL_PASSWORD=foobar
+      - MYSQL_SERVER_ID=2
+    restart: always
+
+  replica2:
+    image: donkeysharp/mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=foobar_db
+      - MYSQL_USER=foobar
+      - MYSQL_PASSWORD=foobar
+      - MYSQL_SERVER_ID=3
+    restart: always
+
+  mysql-loadbalancer:
+    image: donkeysharp/mysql-loadbalancer:latest
+    restart: always
+
+  controller:
+    image: donkeysharp/replica-controller:latest
+    environment:
+      - MYSQL_MASTER_HOST=master
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_USER=foobar
+      - MYSQL_PASSWORD=foobar
+      - MYSQL_DATABASE=foobar_db
+      - MYSQL_REPLICA1_HOST=replica1
+      - MYSQL_REPLICA2_HOST=replica2
+      - MYSQL_REPLICA_USER=replicator
+      - MYSQL_REPLICA_PASSWORD=replicator
