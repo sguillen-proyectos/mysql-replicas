@@ -16,6 +16,7 @@ services:
 
   replica1:
     image: donkeysharp/mysql:latest
+    hostname: replica1
     environment:
       - MYSQL_ROOT_PASSWORD=12345
       - MYSQL_DATABASE=foobar_db
@@ -26,6 +27,7 @@ services:
 
   replica2:
     image: donkeysharp/mysql:latest
+    hostname: replica2
     environment:
       - MYSQL_ROOT_PASSWORD=12345
       - MYSQL_DATABASE=foobar_db
