@@ -40,6 +40,20 @@ services:
     image: donkeysharp/mysql-loadbalancer:latest
     restart: always
 
+  app:
+    image: donkeysharp/dblb-test-app:latest
+    environment:
+      - DB_MASTER_HOSTNAME=master
+      - DB_MASTER_USERNAME=foobar
+      - DB_MASTER_PASSWORD=foobar
+      - DB_SLAVE_HOSTNAME=mysql-loadbalancer
+      - DB_SLAVE_USERNAME=foobar
+      - DB_SLAVE_PASSWORD=foobar
+      - DB_NAME=foobar_db
+    ports:
+      - 8000:8000
+    restart: always
+
   controller:
     image: donkeysharp/replica-controller:latest
     environment:
